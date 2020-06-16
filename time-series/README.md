@@ -1,72 +1,62 @@
 
-# Mod 4 Project - Starter Notebook
+# Mod 4 Project - Time Series Modeling
 
-This notebook has been provided to you so that you can make use of the following starter code to help with the trickier parts of preprocessing the Zillow dataset. 
+For this MOD 4 project I went ahead and chose the Time Series modeling, which gives us the task of finding the 5 best zipcodes to invest in for our stakeholders. I will be acting as a consultant to stakeholders that are interested in seeking some investment opportunities on the west coast. We will look at Los Angeles and two of its most popular areas; Downtown L.A.(DTLA) and Santa Monica(SAMO). 
 
-The notebook contains a rough outline the general order you'll likely want to take in this project. You'll notice that most of the areas are left blank. This is so that it's more obvious exactly when you should make use of the starter code provided for preprocessing. 
-
-**_NOTE:_** The number of empty cells are not meant to infer how much or how little code should be involved in any given step--we've just provided a few for your convenience. Add, delete, and change things around in this notebook as needed!
-
-# Some Notes Before Starting
-
-This project will be one of the more challenging projects you complete in this program. This is because working with Time Series data is a bit different than working with regular datasets. In order to make this a bit less frustrating and help you understand what you need to do (and when you need to do it), we'll quickly review the dataset formats that you'll encounter in this project. 
-
-## Wide Format vs Long Format
-
-If you take a look at the format of the data in `zillow_data.csv`, you'll notice that the actual Time Series values are stored as separate columns. Here's a sample: 
-
-<img src='~/../images/df_head.png'>
-
-You'll notice that the first seven columns look like any other dataset you're used to working with. However, column 8 refers to the median housing sales values for April 1996, column 9 for May 1996, and so on. This This is called **_Wide Format_**, and it makes the dataframe intuitive and easy to read. However, there are problems with this format when it comes to actually learning from the data, because the data only makes sense if you know the name of the column that the data can be found it. Since column names are metadata, our algorithms will miss out on what dates each value is for. This means that before we pass this data to our ARIMA model, we'll need to reshape our dataset to **_Long Format_**. Reshaped into long format, the dataframe above would now look like:
-
-<img src='~/../images/melted1.png'>
-
-There are now many more rows in this dataset--one for each unique time and zipcode combination in the data! Once our dataset is in this format, we'll be able to train an ARIMA model on it. The method used to convert from Wide to Long is `pd.melt()`, and it is common to refer to our dataset as 'melted' after the transition to denote that it is in long format. 
-
-# Helper Functions Provided
-
-Melting a dataset can be tricky if you've never done it before, so you'll see that we have provided a sample function, `melt_data()`, to help you with this step below. Also provided is:
-
-* `get_datetimes()`, a function to deal with converting the column values for datetimes as a pandas series of datetime objects
-* Some good parameters for matplotlib to help make your visualizations more readable. 
-
-Good luck!
+Using the Return on Investment(ROI) statistic we will make a solid recommendation on whether or not L.A. is a place to find a sound investment. It will also give us some insight as to what could happen in the event of another financial crisis like we saw in 2008. 
 
 
-# Step 1: Load the Data/Filtering for Chosen Zipcodes
-
-# Step 2: Data Preprocessing
 
 
-```python
-def get_datetimes(df):
-    return pd.to_datetime(df.columns.values[1:], format='%Y-%m')
-```
+## Contents
 
-# Step 3: EDA and Visualization
+- README.md - currently there!
 
+- CONTRIBUTING.md - a reference to the people who made this project possible.
 
-```python
-font = {'family' : 'normal',
-        'weight' : 'bold',
-        'size'   : 22}
+- LICENSE.md - the required license information.
 
-matplotlib.rc('font', **font)
+- student_notebook.ipynb - the Jupyter Notebook containing the finalized code for this project.
 
-# NOTE: if you visualizations are too cluttered to read, try calling 'plt.gcf().autofmt_xdate()'!
-```
+- zillow_data.csv - the file containing the dataset which comes from Zillow (https://www.zillow.com/research/data/)
 
-# Step 4: Reshape from Wide to Long Format
+- zip_code_database.csv - file containing zip code latitude and longitude (https://www.unitedstateszipcodes.org/zip-code-database/)
+
+- MOD 4 V2 PROJECT.pdf - pdf of my project presentation
 
 
-```python
-def melt_data(df):
-    melted = pd.melt(df, id_vars=['RegionName', 'City', 'State', 'Metro', 'CountyName'], var_name='time')
-    melted['time'] = pd.to_datetime(melted['time'], infer_datetime_format=True)
-    melted = melted.dropna(subset=['value'])
-    return melted.groupby('time').aggregate({'value':'mean'})
-```
+## Libraries and Packages
 
-# Step 5: ARIMA Modeling
+- numpy
+- pandas
+- matplotlib.pyplot
+- statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+- statsmodels.api
+- folium
 
-# Step 6: Interpreting Results
+## Results
+
+We have seen a very interesting result from our modeling. In the past our data showed that DTLA was a better place for investment than Santa Monica even for a short term return at two years. According to our results Santa Monica would seem like the better option for a 5 year return; predicting a 20% gain with a potential gain of 146%, but a potential loss of 105%.
+
+Top Five Zip Codes to Invest (Downtown L.A. & Santa Monica)
+- 90404(SAMO): 98% average six month return
+- 90405(SAMO): 97% average six month return
+- 90013(DTLA): 95% average six month return
+- 90012(DTLA): 73% average six month return
+- 90014(DTLA): 67% average six month return
+
+Very interesting result considering all the past data pointed at Downtown L.A. as an area for a sound investment, regardless of the losses seen in the economic crisis of 2008. Santa Monica has come out on top of the list with two different zip codes showing the largest increase in relation to our chosen areas of DTLA and Santa Monica. Investing close to the water seems to be a good idea.
+
+## Future Work
+
+Collect more recent data of home values to help us better understand what is currently going on with the real estate market in Los Angeles. Using this data we can more precisely pin point the correct zip codes to recommend rather than using the historic data we have.
+
+Investigate the data further to better understand the trends and reinforce the predictive capability of the model.
+
+Since we only looked at two areas of the city, further research into the other inland areas and beach areas to see the comparison and find other opportunities that weren't immediately seen.
+
+Use population, and proximity to freeways and public transportation to see if there is any significant affect on the zip codes average home value.
+
+## Authors
+
+Jose J. Villalobos
